@@ -1,0 +1,50 @@
+
+# download source 
+git clone https://github.com/tlhrigaku/d-star-trek.git
+# download ptypes
+wget --no-check-certificate https://sourceforge.net/projects/ptypes/files/latest/download 
+# download cbflib
+wget --no-check-certificate https://sourceforge.net/projects/cbflib/files/latest/download 
+# untar
+tar -zxvf CBFlib-0.9.5.tar.gz
+tar -zxvf ptypes-2.1.1.tar.gz
+rm CBFlib-0.9.5.tar.gz ptypes-2.1.1.tar.gz 
+# compile ptypes and CBFlib
+cd ptypes-2.1.1/
+make
+# note there is files in ptypes-2.1.1/lib
+cd ptypes-2.1.1/
+make install
+# This is not successful. I am not sure!!
+rpm -ivh epel-release-latest-6.noarch.rpm
+# vi /etc/yum.repos.d/epel.repo
+# replace https with http
+yum install CBFlib-devel
+yum install compat-gcc-34-c++
+yum install openmotif-devel
+# cd d-star-trek
+# vi Makefile
+# Directory where OpenMotif is installed.
+MOTIFHOME  := /usr
+# Directory where CBF library is located.
+CBFHOME    := /root/CBFlib-0.9.5
+# Directory where PTypes library is located.
+PTYPESHOME := /root/ptypes-2.1.1
+CC  = g++ to g++34
+CXX = g++ to g++34
+
+# build
+cd d-star-trek
+sh makeall.sh
+# gmake[1]: uudecode: Command not found
+yum install sharutils
+# I have to ask Alfred to enable rhel-x86_64-workstation-optional-6 for mercutio
+#/usr/bin/ld: cannot find -lxerces-c
+yum install xerces-c-devel
+
+#OK now!!!!
+# I copied all binary to /usr/local/d-star-trek
+export PATH=/usr/local/d-star-trek/:$PATH
+export MALLOC_CHECK_=0
+#which dtdisplay
+#run dtdisplay
