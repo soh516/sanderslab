@@ -30,6 +30,9 @@ MOTIFHOME  := /usr
 CBFHOME    := /root/CBFlib-0.9.5
 # Directory where PTypes library is located.
 PTYPESHOME := /root/ptypes-2.1.1
+...
+...
+...
 CC  = g++ to g++34
 CXX = g++ to g++34
 
