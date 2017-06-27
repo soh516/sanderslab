@@ -1,4 +1,4 @@
-
+# note I did all followings in /root/ dir
 # download source 
 git clone https://github.com/tlhrigaku/d-star-trek.git
 # download ptypes
