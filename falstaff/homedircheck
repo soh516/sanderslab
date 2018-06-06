@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This script will be located @ /home/soh516/engr-ece/tmp
+# falstaff-home is a clean home dir list from falstaff-home
+# falstaff-home will be located @ /home/soh516/engr-ece/tmp
+# homedirchecklog is the normal action log
+# homedircheckerrorlog is the error log 
+
+today=`/bin/date '+%Y_%m_%d_%H_%M_%S'`;
+logfile="/home/soh516/engr-ece/tmp/homedirchecklog_$today"
+/bin/touch $logfile
+errorlogfile="/home/soh516/engr-ece/tmp/homedircheckerrorlog_$today"
+/bin/touch $errorlogfile
+
+function chk {
+  if [ $? -ne 0 ] ; then
+    /bin/echo "ERROR: $1"
+    exit 1
+  fi
+}
+
+function checkquota {
+if [ -d "/home/$1" ]
+then
+   echo /home/$1 >> $logfile
+   df -h /home/$1 >> $logfile
+   echo >> $logfile
+else
+   /bin/echo "/home/$1 doesn't exist" >> $errorlogfile
+fi
+}
+
+while IFS= read -r THELINE; do
+  if [ -n "$THELINE" ]; then
+        checkquota $THELINE
+  fi
+done < /home/soh516/engr-ece/tmp/falstaff-home
