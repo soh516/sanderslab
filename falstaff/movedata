@@ -22,6 +22,7 @@ function chk {
 
 function move-to-chemistry-subdir {
 if [ -d "/data/home/$1" ]
+then
    if [ ! -d "/data/home/$1/chemistry" ]
    then
       /bin/mv /data/home/copy_dir/falstaff/$1/ /data/home/$1/chemistry/
