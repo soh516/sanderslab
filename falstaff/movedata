@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# This script will be located @ /data/home/copy_dir/tmp
+# falstaff-home is a clean home dir list from falstaff-home
+# falstaff-home will be located @ /data/home/copy_dir/tmp
+# movedatalog is the normal action log
+# movedataerrorlog is the error log 
+
+today=`/bin/date '+%Y_%m_%d_%H_%M_%S'`;
+logfile="/data/home/copy_dir/tmp/movedatalog_$today"
+/bin/touch $logfile
+errorlogfile="/data/home/copy_dir/tmp/movedataerrorlog_$today"
+/bin/touch $errorlogfile
+
+function chk {
+  if [ $? -ne 0 ] ; then
+    /bin/echo "ERROR: $1"
+#   exit 1
+#   I do not want to exit. error in the log would be good enough.  
+  fi
+}
+
+function move-to-chemistry-subdir {
+if [ -d "/data/home/$1/chemistry" ]
+then
+   /bin/mv -f /data/home/copy_dir/falstaff/$1/ /data/home/$1/chemistry/
+   chk "can not move data for $1" >> $errorlogfile
+   /bin/chown -Rh $1:posixusers /data/home/$1/chemistry
+   chk "can not chown for $1" >> $errorlogfile
+   /bin/echo "move data and change owner for $1" >> $logfile
+else
+   /bin/echo "/data/home/$1/chemistry doesn't exist" >> $errorlogfile
+fi
+}
+
+# fix permission
+/bin/find /data/home/copy_dir -type d -print0 | /bin/xargs -0 chmod 700 
+chk "can not fix permission for dir" >> $errorlogfile
+/bin/find /data/home/copy_dir -type f -print0 | /bin/xargs -0 chmod go-rwx
+chk "can not fix permission for file" >> $errorlogfile
+
+while IFS= read -r THELINE; do
+  if [ -n "$THELINE" ]; then
+        # normal nsid
+        move-to-chemistry-subdir $THELINE
+  fi
+done < /data/home/copy_dir/tmp/falstaff-home
