@@ -21,15 +21,15 @@ function chk {
 }
 
 function move-to-chemistry-subdir {
-if [ -d "/data/home/$1/chemistry" ]
+if [ ! -d "/data/home/$1/chemistry" ]
 then
-   /bin/mv -f /data/home/copy_dir/falstaff/$1/ /data/home/$1/chemistry/
+   /bin/mv /data/home/copy_dir/falstaff/$1/ /data/home/$1/chemistry/
    chk "can not move data for $1" >> $errorlogfile
    /bin/chown -Rh $1:posixusers /data/home/$1/chemistry
    chk "can not chown for $1" >> $errorlogfile
    /bin/echo "move data and change owner for $1" >> $logfile
 else
-   /bin/echo "/data/home/$1/chemistry doesn't exist" >> $errorlogfile
+   /bin/echo "/data/home/$1/chemistry exists already" >> $errorlogfile
 fi
 }
 
