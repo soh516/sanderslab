@@ -1,0 +1,10 @@
+#edit /etc/fstab
+umount -l /home
+mount /home
+service sssd stop
+sss_cache -E
+chkconfig sssd off
+#edit /etc/passwd
+#edit /etc/profile 
+service ypbind start
+chkconfig ypbind on
