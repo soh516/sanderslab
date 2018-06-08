@@ -1,0 +1,13 @@
+service ypbind stop
+chkconfig --del ypbind 
+#edit /etc/nsswitch.conf
+#edit /etc/sssd/sssd.conf
+chmod 0700 /etc/sssd/sssd.conf
+#edit /etc/idmapd.conf 
+chkconfig sssd on 
+service sssd start  
+#edit /etc/fstab
+umount -l /home
+mount /home
+#edit /etc/passwd
+#edit /etc/profile
